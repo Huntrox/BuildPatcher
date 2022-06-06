@@ -39,7 +39,7 @@ class App(tk.Tk):
         self.style.configure('TEntry', font=('Helvetica', 11))
         
 
-        self.api = itchApi.ItchApi(preferences.url)
+        self.api = itchApi.ItchApi(config.url)
         asyncio.run(self.api.get_games())
         # make array of api.games username and channels
         self.game_pages = self.api.games
@@ -143,14 +143,14 @@ class App(tk.Tk):
             initialdir="/", title="Select file", filetypes=(("Zip files", "*.zip"),("Rar files","*.rar"),("all files", "*.*")))
         self.build_path_input.set(file_path)
 
-class Preferences:
+class Config:
     def __init__(self):
         self.apiToken = None
         self.butlerPath = None
-        #load prefs file from prefs path and read it using file stream
-        with open("preferences.txt", 'r') as preferences_file:
+
+        with open("config.txt", 'r') as config_file:
             #read the file line by line
-            for line in preferences_file:
+            for line in config_file:
                 #split the line by the = sign
                 splitLine = line.split('=')
                 #if the first part of the line is the api token
@@ -163,7 +163,7 @@ class Preferences:
                 #     self.butlerPath = splitLine[1].strip()       
         self.url = f'https://itch.io/api/1/{self.apiToken}/my-games'
   
-preferences = Preferences()
+config = Config()
 
 if __name__ == "__main__":
     app = App()
