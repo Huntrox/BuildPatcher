@@ -12,6 +12,7 @@ class ItchApi:
         self.url = url
         self.root = None
         self.games = []
+        self.error = False
 
     async def get_games(self):
         
@@ -21,6 +22,10 @@ class ItchApi:
         # generate the object using json.dumps()
         # corresponding to json data
         json_data = json.loads(response.text)
+        #check if  json_data contains the key "errors"
+        if "errors" in json_data and "invalid key" in json_data['errors']:
+            self.error = True
+            return
         self.root = Root.from_dict(json_data)
         # loop through root.games and print game id and title
         for game in self.root.games:

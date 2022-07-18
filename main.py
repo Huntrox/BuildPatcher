@@ -1,4 +1,5 @@
 import asyncio
+from distutils.command.config import config
 import itchApi
 import tkinter as tk
 from tkinter import  StringVar, ttk, filedialog, scrolledtext
@@ -26,6 +27,8 @@ class App(tk.Tk):
         self.channel_option = StringVar()
         self.build_version_input = StringVar()
         self.console_output = StringVar()
+        self.api_key_input = StringVar()
+        self.api_key_input.set(config.apiToken)
         self.console = scrolledtext.ScrolledText(
             self, wrap=tk.WORD, width=40, height=1.5, font=("Helvetica", 10))
 
@@ -42,6 +45,15 @@ class App(tk.Tk):
         self.api = itchApi.ItchApi(config.url)
         asyncio.run(self.api.get_games())
         # make array of api.games username and channels
+        if self.api.error:
+            #draw label of invalid api key error and return
+            ttk.Label(self, text="Invalid API Key", style="BW.TLabel").grid(
+            column=0, row=0, sticky='EWN',**padding_label)
+            key_entry_field = ttk.Entry(self, textvariable=self.api_key_input)
+            key_entry_field.grid(row=1, column=0, columnspan=2,sticky=EWN,**padding_entry)
+            ttk.Button(self, text="Submit", command=self.on_submit_key).grid(row=1,column=2, sticky=EWN, **padding_btn)
+            return
+
         self.game_pages = self.api.games
         self.game_page_option.set(self.game_pages[0])
 
@@ -88,7 +100,7 @@ class App(tk.Tk):
         self.layer_indent()
         ttk.Label(self, text="Channel: ", style="BW.TLabel").grid(
             column=0, row=self.layer, sticky=EWN, **padding_label)
-        opt = ["Win", "Mac", "Linux"]
+        opt = ["windows", "mac", "linux","html5","android"]
 
         self.channel_option.set(opt[0])
         self.layer_indent()
@@ -142,12 +154,17 @@ class App(tk.Tk):
         file_path = filedialog.askopenfilename(
             initialdir="/", title="Select file", filetypes=(("Zip files", "*.zip"),("Rar files","*.rar"),("all files", "*.*")))
         self.build_path_input.set(file_path)
-
+    def on_submit_key(self):
+        config.apiToken = self.api_key_input.get()
+        config.save()
 class Config:
     def __init__(self):
         self.apiToken = None
         self.butlerPath = None
+        self.open()
 
+
+    def open(self):
         with open("config.txt", 'r') as config_file:
             #read the file line by line
             for line in config_file:
@@ -162,6 +179,11 @@ class Config:
                 #     #set the butler path to the second part of the line
                 #     self.butlerPath = splitLine[1].strip()       
         self.url = f'https://itch.io/api/1/{self.apiToken}/my-games'
+        
+    def save(self):
+        with open("config.txt", 'w') as config_file:
+            config_file.write(f'apiToken={self.apiToken}\n')
+            # config_file.write(f'butlerPath={self.butlerPath}\n')
   
 config = Config()
 

@@ -2,7 +2,7 @@ import pyinstaller_versionfile
 
 pyinstaller_versionfile.create_versionfile(
     output_file="version.txt",
-    version="1.0.0",
+    version="1.0.1",
     company_name="HuntroxGames",
     file_description="Build Patcher",
     internal_name="Build Patcher",
