@@ -4,7 +4,8 @@ Build Patcher is a simple tool made to make uploading games to itch.io easier
 ![img](https://i.imgur.com/mLd2D3n.png)
 
 ![img](https://i.imgur.com/b7GSMmb.png)
-
+### Why Use Build Patcher?
+If you are a game developer who frequently uploads game builds to itch.io, Build Patcher can significantly simplify your workflow. It automates the process of selecting the build file, choosing the target user/game page, selecting the platform (Windows, Mac, Linux), and updating the game version. With just a few clicks, you can quickly upload your game to itch.io without the hassle of doing it manually.
 ### How To Use
 
 * Select Build File (Zip or Rar)
